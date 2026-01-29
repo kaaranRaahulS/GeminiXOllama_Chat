@@ -17,14 +17,11 @@ you try to calm them down and keep chatting."
 
 def chat_gemini():
     client = genai.Client()
-    
-    # Build conversation history using Gemini's Content format
     conversation = []
     for ollama_msg, gemini_msg in zip(ollama_messages, gemini_messages):
         conversation.append(genai.types.Content(role='user', parts=[genai.types.Part(text=ollama_msg)]))
         conversation.append(genai.types.Content(role='model', parts=[genai.types.Part(text=gemini_msg)]))
     
-    # Only add if there's an unpaired message
     if len(ollama_messages) > len(gemini_messages):
         conversation.append(genai.types.Content(role='user', parts=[genai.types.Part(text=ollama_messages[-1])]))
 
@@ -52,12 +49,10 @@ print(f"Ollama:\n{ollama_messages[0]}\n")
 print(f"Gemini:\n{gemini_messages[0]}\n")
 
 for i in range(5):
-    # Call Ollama to generate the next message
     ollama_next = chat_ollama()  
     print(f"Ollama:\n{ollama_next}\n")
     ollama_messages.append(ollama_next)
     
-    # Call Gemini to generate the next message
     gemini_next = chat_gemini()  
     print(f"Gemini:\n{gemini_next}\n")
     gemini_messages.append(gemini_next)
